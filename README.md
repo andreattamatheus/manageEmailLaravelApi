@@ -1,165 +1,87 @@
-# Laravel API Project
+# Manage Email Laravel API
 
-## Overview
+A Laravel API for managing email records: create, read, update, and delete records, including parsing raw email content. All endpoints (besides auth) require a Bearer token.
 
-This project is a Laravel-based API with endpoints for managing email records. It includes functionality for creating, reading, updating, and deleting email records, as well as parsing raw email content. The API requires authentication for access.
+## Tech Stack
 
-## Table of Contents
+- PHP 8.1+, Laravel
+- MySQL
+- Laravel Sanctum (auth), queues
 
--   [Requirements](#requirements)
--   [Installation](#installation)
--   [Configuration](#configuration)
--   [Running the Application](#running-the-application)
--   [API Endpoints](#api-endpoints)
--   [Authentication](#authentication)
+## Prerequisites
 
-## Requirements
-
--   PHP 8.1 or higher
--   Composer
--   MySQL
--   Node.js and npm (for frontend assets)
+- PHP 8.1+
+- Composer
+- MySQL
+- Node.js + npm (for frontend assets)
 
 ## Installation
 
-**Clone the Repository**
-
-```bash
-git clone https://github.com/andreattamatheus/peakOneDevApi
-cd your-project
-```
-
-## Project API
-
-Copy the .env-example and rename it to .env
-
-Inside the .env file, you must filled the correct info about your DB.
-
--   DB_HOST=127.0.0.1
--   DB_PORT=3306
--   DB_DATABASE=YOUR_DATABASE
--   DB_USERNAME=YOUR_USERNAME
--   DB_PASSWORD=YOUR_PASSWORD
-
-```
+```sh
+git clone https://github.com/andreattamatheus/manageEmailLaravelApi
+cd manageEmailLaravelApi
 composer install
 ```
 
+Copy `.env.example` to `.env` and fill in your database credentials:
+
 ```
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=YOUR_DATABASE
+DB_USERNAME=YOUR_USERNAME
+DB_PASSWORD=YOUR_PASSWORD
+```
+
+```sh
 php artisan optimize
-```
-
-Two users will be created here: backoffice@yopmail.com and admin@yopmail.com. Both have the password _123123123_
-
-```
 php artisan migrate:fresh --seed
-```
-
-```
 php artisan serve
 ```
 
-### Pint
+Seeding creates two users: `backoffice@yopmail.com` and `admin@yopmail.com`, both with password `123123123`.
 
-```
- ./vendor/bin/pint
-```
+## Background Jobs
 
-### PHPStan
-
-```
- ./vendor/bin/phpstan analyse
+```sh
+php artisan schedule:list     # list scheduled jobs
+php artisan email:parse       # parse raw email content
+php artisan queue:listen      # process queued jobs
 ```
 
-### Test
+## Quality & Tests
 
-```
+```sh
+./vendor/bin/pint
+./vendor/bin/phpstan analyse
 php artisan test
-```
-
-### Delete job
-
-You can check the schedules jobs:
-
-```
-php artisan schedule:list
-```
-
-If you want to run the command to parse the content, you can try:
-
-```
-php artisan email:parse
-```
-
-Then run:
-
-```
-php artisan queue:listen
 ```
 
 ## API Endpoints
 
-### Create user
+### Auth
 
--   URL: /register
--   Method: POST
--   Headers: Content-Type: multipart/form-data
--   Description: Creates a new user
+| Method | URL | Description |
+|---|---|---|
+| POST | `/register` | Create a new user |
+| POST | `/login` | Log in and receive a Bearer token |
 
-### Login user
+### Email Records (`/api/v1/emails`)
 
--   URL: /login
--   Method: POST
--   Headers: Authorization: Bearer {token}, Content-Type: multipart/form-data
--   Description: Login a user
+| Method | URL | Description |
+|---|---|---|
+| POST | `/api/v1/emails` | Create a record, parses raw email content |
+| GET | `/api/v1/emails` | List all records (excludes deleted, pagination optional) |
+| GET | `/api/v1/emails/{emailId}` | Fetch a single record |
+| PUT | `/api/v1/emails/{emailId}` | Update a record |
+| DELETE | `/api/v1/emails/{emailId}` | Soft-delete a record |
 
-### Store a New Record
+All record endpoints require:
 
--   URL: /api/v1/emails
--   Method: POST
--   Headers: Authorization: Bearer {token}, Content-Type: multipart/form-data
--   Description: Creates a new record and parses the raw email content.
-
-### Get Record by ID
-
--   URL: /api/v1/emails/{emailId}
--   Method: GET
--   Headers: Authorization: Bearer {token}
--   Description: Fetches a single record by its ID.
-
-### Update a Record
-
--   URL: /api/v1/emails/{emailId}
--   Method: PUT
--   Headers: Authorization: Bearer {token}, Content-Type: application/json
--   Description: Updates a record by its ID.
-
-### Get All Records
-
--   URL: /api/v1/emails
--   Method: GET
--   Headers: Authorization: Bearer {token}
--   Description: Returns all records, excluding deleted items. Pagination is optional.
-
-### Delete a Record by ID
-
--   URL: /api/v1/emails/{emailId}
--   Method: DELETE
--   Headers: Authorization: Bearer {token}
--   Description: Soft deletes a record by its ID.
-
-## Authentication
-
-### Generating a Token
-
-You need to generate a token to authenticate API requests. Use Laravel’s built-in authentication features or a package like Passport to manage tokens.
-
-### Making Authenticated Requests
-
-Include the token in the Authorization header of your requests:
-
+```
 Authorization: Bearer {your_token}
+```
 
-```
-4|FtA7npeqHV6pA926caMyK62V6KTu0xJaLphzfVUQ3550142d
-```
+## Contact
+
+Matheus Andreatta — [@andreattamatheus](https://github.com/andreattamatheus)
