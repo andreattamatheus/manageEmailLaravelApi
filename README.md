@@ -82,6 +82,20 @@ All record endpoints require:
 Authorization: Bearer {your_token}
 ```
 
+## Challenge
+
+Take-home engineering assessment. Raw emails collected by a SendGrid inbound webhook are stored in a `successful_emails` table.
+
+- **Parsing command:** extract only the plain-text body from the raw `email` column (no HTML, only printable characters and `\n`) and save it to `raw_text`. It runs every hour and skips records already processed. No external parsing services allowed.
+- **Authenticated REST API** over the same table:
+  - **Store** — create a record and parse it automatically
+  - **Get by ID**
+  - **Update** by ID
+  - **Get all** — excluding deleted records, pagination optional
+  - **Delete by ID** — soft delete only
+
+**Evaluated on:** code quality and cleanliness, architecture, accuracy of the parsed output, and development time.
+
 ## Contact
 
 Matheus Andreatta — [@andreattamatheus](https://github.com/andreattamatheus)
